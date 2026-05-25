@@ -1,0 +1,77 @@
+# .github/workflows/ci.yml
+# CI/CD pipeline: запуск тестов + деплой на GitHub Pages
+
+name: CI / CD
+
+on:
+  push:
+    branches: ["**"]        # триггер на любой push в любую ветку
+  pull_request:
+    branches: ["**"]        # триггер на любой pull request
+
+jobs:
+
+  # ─── JOB 1: Автотесты ────────────────────────────────────────────────────
+  test:
+    name: Selenium UI Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Получить код репозитория
+      - name: Checkout репозитория
+        uses: actions/checkout@v4
+
+      # 2. Установить Python
+      - name: Настройка Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      # 3. Установить зависимости
+      - name: Установка зависимостей
+        run: pip install selenium pytest
+
+      # 4. Установить Chrome + ChromeDriver
+      - name: Установка Google Chrome
+        uses: browser-actions/setup-chrome@v1
+
+      # 5. Запустить тесты
+      - name: Запуск Selenium-тестов
+        run: pytest tests/ -v
+
+
+  # ─── JOB 2: Деплой на GitHub Pages (только main + тесты прошли) ──────────
+  deploy:
+    name: Deploy to GitHub Pages
+    needs: test                  # запускается ТОЛЬКО если job test прошёл
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # 1. Получить код
+      - name: Checkout репозитория
+        uses: actions/checkout@v4
+
+      # 2. Настроить GitHub Pages
+      - name: Настройка GitHub Pages
+        uses: actions/configure-pages@v4
+
+      # 3. Загрузить файлы сайта как артефакт
+      - name: Загрузка артефакта Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."            # корень проекта (там лежит index.html)
+
+      # 4. Опубликовать на GitHub Pages
+      - name: Деплой на GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

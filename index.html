@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Регистрация</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Manrope:wght@300;400;600&display=swap');
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:        #0d0f14;
+      --surface:   #13161d;
+      --border:    #23283a;
+      --accent:    #4f8cff;
+      --accent2:   #a78bfa;
+      --text:      #e8eaf0;
+      --muted:     #5a6075;
+      --error:     #ff5a5a;
+      --success:   #3ddc84;
+      --radius:    10px;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Manrope', sans-serif;
+      color: var(--text);
+      padding: 24px;
+      background-image:
+        radial-gradient(ellipse 60% 50% at 70% 20%, rgba(79,140,255,.08) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 40% at 20% 80%, rgba(167,139,250,.06) 0%, transparent 70%);
+    }
+
+    .card {
+      width: 100%;
+      max-width: 440px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 44px 40px 40px;
+      box-shadow: 0 8px 48px rgba(0,0,0,.45);
+      animation: fadeUp .45s cubic-bezier(.22,1,.36,1) both;
+    }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(22px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    .logo {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: .18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 28px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo::before {
+      content: '';
+      display: inline-block;
+      width: 8px; height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+      box-shadow: 0 0 8px var(--accent);
+    }
+
+    h1 {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -.02em;
+      margin-bottom: 6px;
+    }
+
+    .subtitle {
+      font-size: 13.5px;
+      color: var(--muted);
+      margin-bottom: 32px;
+      font-weight: 300;
+    }
+
+    .field {
+      margin-bottom: 18px;
+    }
+
+    label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 7px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    input, select {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 11px 14px;
+      font-size: 14.5px;
+      font-family: 'Manrope', sans-serif;
+      color: var(--text);
+      transition: border-color .18s, box-shadow .18s;
+      outline: none;
+      appearance: none;
+    }
+
+    select {
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%235a6075' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      padding-right: 36px;
+    }
+
+    input:focus, select:focus {
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(79,140,255,.15);
+    }
+
+    input::placeholder { color: var(--muted); }
+
+    input.error, select.error {
+      border-color: var(--error);
+      box-shadow: 0 0 0 3px rgba(255,90,90,.12);
+    }
+
+    .field-error {
+      font-size: 12px;
+      color: var(--error);
+      margin-top: 5px;
+      display: none;
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .field-error.visible { display: block; }
+
+    .checkbox-row {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin-bottom: 26px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 16px; height: 16px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      accent-color: var(--accent);
+      cursor: pointer;
+    }
+
+    .checkbox-row span {
+      font-size: 13px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .checkbox-row a {
+      color: var(--accent);
+      text-decoration: none;
+    }
+
+    button[type="submit"] {
+      width: 100%;
+      padding: 13px;
+      background: var(--accent);
+      color: #fff;
+      font-family: 'Manrope', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      border: none;
+      border-radius: var(--radius);
+      cursor: pointer;
+      letter-spacing: .01em;
+      transition: background .18s, transform .12s, box-shadow .18s;
+      box-shadow: 0 4px 18px rgba(79,140,255,.3);
+    }
+
+    button[type="submit"]:hover {
+      background: #6ba0ff;
+      box-shadow: 0 6px 24px rgba(79,140,255,.45);
+    }
+
+    button[type="submit"]:active { transform: scale(.98); }
+
+    #success-msg {
+      display: none;
+      margin-top: 18px;
+      padding: 13px 16px;
+      background: rgba(61,220,132,.08);
+      border: 1px solid rgba(61,220,132,.25);
+      border-radius: var(--radius);
+      color: var(--success);
+      font-size: 13.5px;
+      font-family: 'JetBrains Mono', monospace;
+      text-align: center;
+    }
+    #success-msg.visible { display: block; }
+
+    .divider {
+      height: 1px;
+      background: var(--border);
+      margin: 26px 0;
+    }
+
+    .signin-link {
+      text-align: center;
+      font-size: 13px;
+      color: var(--muted);
+    }
+    .signin-link a {
+      color: var(--accent2);
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">cicd — lab</div>
+  <h1>Создать аккаунт</h1>
+  <p class="subtitle">Заполните форму для регистрации</p>
+
+  <form id="reg-form" novalidate>
+
+    <div class="field">
+      <label for="username">Имя пользователя</label>
+      <input id="username" name="username" type="text"
+             placeholder="ivan_petrov" autocomplete="off" />
+      <div class="field-error" id="username-error">Введите имя пользователя</div>
+    </div>
+
+    <div class="field">
+      <label for="email">Email</label>
+      <input id="email" name="email" type="email"
+             placeholder="ivan@example.com" autocomplete="off" />
+      <div class="field-error" id="email-error">Введите корректный email</div>
+    </div>
+
+    <div class="field">
+      <label for="role">Роль</label>
+      <select id="role" name="role">
+        <option value="">— выберите роль —</option>
+        <option value="developer">Разработчик</option>
+        <option value="tester">Тестировщик</option>
+        <option value="manager">Менеджер</option>
+      </select>
+      <div class="field-error" id="role-error">Выберите роль</div>
+    </div>
+
+    <div class="field">
+      <label for="password">Пароль</label>
+      <input id="password" name="password" type="password"
+             placeholder="минимум 6 символов" autocomplete="new-password" />
+      <div class="field-error" id="password-error">Пароль — минимум 6 символов</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="checkbox-row">
+      <input id="agree" name="agree" type="checkbox" />
+      <span>Я принимаю <a href="#">условия использования</a> и
+            <a href="#">политику конфиденциальности</a></span>
+    </div>
+
+    <button type="submit" id="submit-btn">Зарегистрироваться</button>
+
+    <div id="success-msg">✓ Регистрация прошла успешно!</div>
+  </form>
+
+  <div class="divider"></div>
+  <div class="signin-link">
+    Уже есть аккаунт? <a href="#">Войти</a>
+  </div>
+</div>
+
+<script>
+  const form = document.getElementById('reg-form');
+
+  function setError(id, show) {
+    const input = document.getElementById(id);
+    const err   = document.getElementById(id + '-error');
+    if (show) { input.classList.add('error');    err.classList.add('visible'); }
+    else       { input.classList.remove('error'); err.classList.remove('visible'); }
+  }
+
+  function validate() {
+    const username = document.getElementById('username').value.trim();
+    const email    = document.getElementById('email').value.trim();
+    const role     = document.getElementById('role').value;
+    const password = document.getElementById('password').value;
+    const agree    = document.getElementById('agree').checked;
+
+    let valid = true;
+
+    if (!username) { setError('username', true); valid = false; }
+    else             setError('username', false);
+
+    const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+    if (!emailOk) { setError('email', true); valid = false; }
+    else            setError('email', false);
+
+    if (!role) { setError('role', true); valid = false; }
+    else         setError('role', false);
+
+    if (password.length < 6) { setError('password', true); valid = false; }
+    else                       setError('password', false);
+
+    return valid && agree;
+  }
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (validate()) {
+      document.getElementById('success-msg').classList.add('visible');
+      form.reset();
+    }
+  });
+</script>
+
+</body>
+</html>
