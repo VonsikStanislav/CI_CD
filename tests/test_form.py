@@ -62,6 +62,7 @@ def test_форма_содержит_все_поля(driver):
 
     btn = driver.find_element(By.ID, "submit-btn")
     assert btn.is_displayed(), "Кнопка отправки не отображается"
+
     assert "Создать аккаунт" in btn.text, \
         f"Неожиданный текст кнопки: {btn.text}"
 
